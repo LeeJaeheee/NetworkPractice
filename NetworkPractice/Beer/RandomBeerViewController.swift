@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-//TODO: indicator 추가, 페어링 추천 페이지 구현
+//TODO: indicator 추가
 
 class RandomBeerViewController: UIViewController {
 
@@ -30,6 +30,12 @@ class RandomBeerViewController: UIViewController {
         configureUI()
     }
 
+    @IBAction func pairingButtonTapped(_ sender: UIButton) {
+        let alert = UIAlertController(title: "", message: beer?.food_pairing.joined(separator: "\n\n"), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "냠냠굿😋", style: .default))
+        present(alert, animated: true)
+    }
+    
     @IBAction func refreshButtonTapped(_ sender: UIButton) {
         callRequest()
     }
@@ -64,6 +70,7 @@ extension RandomBeerViewController {
     func callRequest() {
         manager.callRequest(urlString: urlString) { value in
             self.setUI(value: value[0])
+            self.beer = value[0]
         }
     }
     

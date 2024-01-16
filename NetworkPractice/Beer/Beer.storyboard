@@ -109,6 +109,9 @@
                                 <state key="normal" title="페어링" image="fork.knife" catalog="system">
                                     <color key="titleColor" systemColor="systemRedColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="pairingButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="ZGC-nb-tc5"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="오늘은 이 맥주를 추천합니다!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VFM-BE-lha">
                                 <rect key="frame" x="71.666666666666686" y="131" width="250" height="27"/>
