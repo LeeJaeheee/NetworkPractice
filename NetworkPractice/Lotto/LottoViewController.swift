@@ -10,7 +10,6 @@ import UIKit
 class LottoViewController: UIViewController {
 
     @IBOutlet var textField: UITextField!
- 
     @IBOutlet var numberLabelList: [UILabel]!
     
     let manager = LottoAPIManager()
@@ -38,8 +37,11 @@ extension LottoViewController {
         textField.inputView = lottoPickerView
         
         numberLabelList.forEach { label in
+            label.textColor = .white
             label.textAlignment = .center
             label.font = .boldSystemFont(ofSize: 18)
+            label.layer.cornerRadius = label.frame.width / 2
+            label.layer.masksToBounds = true
         }
         
         selected(number: 1102)
@@ -50,7 +52,19 @@ extension LottoViewController {
         manager.callRequest(number: "\(number)") { value in
             for (i, label) in self.numberLabelList.enumerated() {
                 label.text = String(value[i])
+                label.backgroundColor = self.getColor(value: value[i])
             }
+        }
+    }
+    
+    func getColor(value: Int) -> UIColor {
+        switch value {
+        case 1...10: return .systemYellow
+        case 11...20: return .systemBlue
+        case 21...30: return .systemRed
+        case 31...40: return .systemGray
+        case 41...45: return .systemGreen
+        default: return .clear
         }
     }
 }
