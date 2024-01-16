@@ -10,17 +10,14 @@ import Alamofire
 
 struct BeerAPIManager {
     
-    func callRandomBeerRequest(completionHandler: @escaping (Beer) -> Void) {
-        let url = "https://api.punkapi.com/v2/beers/random"
-        
-        AF.request(url)
+    func callRequest(urlString: String, completionHandler: @escaping ([Beer]) -> Void) {
+        AF.request(urlString)
             .responseDecodable(of: [Beer].self) { response in
                 switch response.result {
                 case .success(let success):
-                    print(success)
-                    completionHandler(success[0])
+                    completionHandler(success)
                 case .failure(let failure):
-                    print(failure)
+                    print("오류 발생")
                 }
             }
     }

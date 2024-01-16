@@ -8,10 +8,11 @@
 import UIKit
 import Kingfisher
 
-//TODO: indicator 추가, configureUI 다시 체크, 페어링 페이지 연결
+//TODO: indicator 추가, 페어링 추천 페이지 구현
 
 class RandomBeerViewController: UIViewController {
 
+    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
@@ -19,6 +20,9 @@ class RandomBeerViewController: UIViewController {
     @IBOutlet var refreshButton: UIButton!
     
     let manager = BeerAPIManager()
+    let urlString = "https://api.punkapi.com/v2/beers/random"
+    
+    var beer: Beer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,16 +31,12 @@ class RandomBeerViewController: UIViewController {
     }
 
     @IBAction func refreshButtonTapped(_ sender: UIButton) {
-        manager.callRandomBeerRequest { value in
-            if let urlString = value.image_url {
-                self.imageView.kf.setImage(with: URL(string: urlString))
-            } else {
-                self.imageView.image = UIImage(systemName: "wineglass.fill")
-            }
-            self.nameLabel.text = value.name
-            self.descriptionLabel.text = value.description
-        }
+        callRequest()
     }
+    
+}
+
+extension RandomBeerViewController {
     
     func configureUI() {
         imageView.tintColor = .black
@@ -47,10 +47,34 @@ class RandomBeerViewController: UIViewController {
         pairingButton.setTitleColor(.systemRed, for: .normal)
         pairingButton.tintColor = .systemRed
         
-        refreshButtonTapped(refreshButton)
-        refreshButton.setTitle(" 다른 맥주 추천받기", for: .normal)
-        refreshButton.setTitleColor(.systemYellow, for: .normal)
-        refreshButton.tintColor = .systemYellow
+        if let beer {
+            titleLabel.isHidden = true
+            refreshButton.isHidden = true
+            setUI(value: beer)
+        } else {
+            callRequest()
+            
+            refreshButton.setTitle(" 다른 맥주 추천받기", for: .normal)
+            refreshButton.setTitleColor(.systemYellow, for: .normal)
+            refreshButton.tintColor = .systemYellow
+        }
+        
     }
     
+    func callRequest() {
+        manager.callRequest(urlString: urlString) { value in
+            self.setUI(value: value[0])
+        }
+    }
+    
+    func setUI(value: Beer) {
+        if let imageUrl = value.image_url {
+            self.imageView.kf.setImage(with: URL(string: imageUrl))
+        } else {
+            self.imageView.image = UIImage(systemName: "wineglass.fill")
+        }
+        self.nameLabel.text = value.name
+        self.descriptionLabel.text = value.description
+    }
+
 }
